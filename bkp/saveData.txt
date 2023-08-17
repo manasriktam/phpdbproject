@@ -1,0 +1,30 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+
+    // Connect to SQLite database
+    $db = new SQLite3('db/myTestDB.db'); // Replace with your database name
+
+    if (!$db) {
+        die("Connection failed: " . $db->lastErrorMsg());
+    }
+
+    // Create a table if not exists
+    $createTableQuery = "CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY, name TEXT, email TEXT)";
+    $db->exec($createTableQuery);
+
+    // Insert data into the table
+    $insertQuery = "INSERT INTO data (name, email) VALUES ('$name', '$email')";
+    $db->exec($insertQuery);
+
+    // Close the database connection
+    $db->close();
+
+    echo "Data saved successfully!";
+
+    // Redirect back to the homepage
+    header("Location: index.html"); // Change to the actual filename of your homepage
+    exit();
+}
+?>
